@@ -45,23 +45,6 @@ hamburger.addEventListener('click', openMobileMenu);
 closeMenu.addEventListener('click', closeMobileMenu);
 overlay.addEventListener('click', closeMobileMenu);
 
-// Form Submission
-const contactForm = document.getElementById('contactForm');
-
-contactForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', contactForm).then(
-    () => {
-      alert('✅ Thank you! Your message has been sent.');
-      contactForm.reset();
-    },
-    (err) => {
-      alert('❌ Failed to send: ' + JSON.stringify(err));
-    }
-  );
-});
-
 // Add smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', function (e) {
