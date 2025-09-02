@@ -252,10 +252,15 @@ header {
   line-height: 1.2;
   margin-bottom: 1.5rem;
   color: var(--dark);
+  background: var(--bg-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .dark-mode .hero-text h1 {
-  color: var(--light);
+  background: var(--bg-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .hero-text p {
@@ -265,7 +270,7 @@ header {
 }
 
 .dark-mode .hero-text p {
-  color: var(--gray);
+  color: #e2e8f0;
 }
 
 .hero-buttons {
@@ -357,7 +362,7 @@ header {
 }
 
 .dark-mode .about-content h2 {
-  color: var(--light);
+  color: #f8fafc;
 }
 
 .about-content p {
@@ -366,7 +371,7 @@ header {
 }
 
 .dark-mode .about-content p {
-  color: var(--gray);
+  color: #cbd5e1;
 }
 
 .about-details {
@@ -401,7 +406,7 @@ header {
 }
 
 .dark-mode .detail-card h3 {
-  color: var(--light);
+  color: #f8fafc;
 }
 
 .detail-card p {
@@ -410,7 +415,7 @@ header {
 }
 
 .dark-mode .detail-card p {
-  color: var(--gray);
+  color: #cbd5e1;
 }
 
 /* Skills Section */
@@ -437,7 +442,7 @@ header {
 }
 
 .dark-mode .skill-category h2 {
-  color: var(--light);
+  color: #f8fafc;
 }
 
 .skills-list {
@@ -516,7 +521,7 @@ header {
 }
 
 .dark-mode .project-content h3 {
-  color: var(--light);
+  color: #f8fafc;
 }
 
 .project-content p {
@@ -525,7 +530,7 @@ header {
 }
 
 .dark-mode .project-content p {
-  color: var(--gray);
+  color: #cbd5e1;
 }
 
 .project-tech {
@@ -553,7 +558,7 @@ header {
   gap: 1rem;
 }
 
-/* Contact Section - UPDATED */
+/* Contact Section */
 .contact-container {
   display: flex;
   justify-content: center;
@@ -603,7 +608,7 @@ header {
 }
 
 .dark-mode .contact-details h3 {
-  color: var(--light);
+  color: #f8fafc;
 }
 
 .contact-details p,
@@ -616,10 +621,10 @@ header {
 
 .dark-mode .contact-details p,
 .dark-mode .contact-details a {
-  color: var(--gray);
+  color: #cbd5e1;
 }
 
-.contact-details a:hover {
+.dark-mode .contact-details a:hover {
   color: var(--primary);
 }
 
