@@ -51,9 +51,15 @@ const contactForm = document.getElementById('contactForm');
 contactForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  // In a real application, you would send the form data to a server
-  alert('Thank you for your message! I will get back to you soon.');
-  contactForm.reset();
+  emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', contactForm).then(
+    () => {
+      alert('✅ Thank you! Your message has been sent.');
+      contactForm.reset();
+    },
+    (err) => {
+      alert('❌ Failed to send: ' + JSON.stringify(err));
+    }
+  );
 });
 
 // Add smooth scrolling for navigation links
