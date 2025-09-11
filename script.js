@@ -62,3 +62,52 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     }
   });
 });
+
+// Add this to your existing JavaScript
+
+// Intersection Observer for about section animation
+const aboutSection = document.getElementById('about');
+const aboutImage = document.querySelector('.about-image img');
+
+const aboutObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        aboutSection.classList.add('in-view');
+
+        // Add a slight delay to sync with scroll
+        setTimeout(() => {
+          if (aboutImage) {
+            aboutImage.style.animation = 'imageTransition 1.5s ease forwards';
+          }
+        }, 300);
+      }
+    });
+  },
+  { threshold: 0.3 }
+);
+
+aboutObserver.observe(aboutSection);
+
+// Additional smooth transition for the entire page
+document.querySelectorAll('section').forEach((section) => {
+  section.style.opacity = '0';
+  section.style.transform = 'translateY(50px)';
+  section.style.transition = 'all 1s ease';
+});
+
+const sectionObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  },
+  { threshold: 0.1 }
+);
+
+document.querySelectorAll('section').forEach((section) => {
+  sectionObserver.observe(section);
+});

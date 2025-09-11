@@ -816,3 +816,56 @@ footer {
   opacity: 1;
   visibility: visible;
 }
+/* Add this to your existing CSS */
+
+/* Animation for hero image to about image transition */
+@keyframes imageTransition {
+  0% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    transform: scale(1);
+  }
+  25% {
+    border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+    transform: scale(1.05);
+  }
+  50% {
+    border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+    transform: scale(1.1);
+  }
+  75% {
+    border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+    transform: scale(1.05);
+  }
+  100% {
+    border-radius: 20px; /* Matching the about image */
+    transform: scale(1);
+  }
+}
+
+/* Add a container for both images to create the transition effect */
+.image-transition-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-image, .about-image {
+  transition: all 0.8s ease;
+}
+
+/* When the about section comes into view, transform the hero image style to about image style */
+#about.in-view .about-image img {
+  animation: imageTransition 1.5s ease forwards;
+}
+
+/* Add intersection observer to detect when about section is in view */
+#about {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1s ease;
+}
+
+#about.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
