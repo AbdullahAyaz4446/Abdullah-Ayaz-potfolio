@@ -14,6 +14,9 @@ themeToggle.addEventListener('click', () => {
     themeIcon.classList.add('fa-moon');
     localStorage.setItem('theme', 'light');
   }
+
+  // Update circular progress colors
+  updateProgressColors();
 });
 
 // Check for saved theme preference
@@ -45,6 +48,11 @@ hamburger.addEventListener('click', openMobileMenu);
 closeMenu.addEventListener('click', closeMobileMenu);
 overlay.addEventListener('click', closeMobileMenu);
 
+// Close mobile menu when clicking on links
+document.querySelectorAll('.mobile-nav-links a').forEach((link) => {
+  link.addEventListener('click', closeMobileMenu);
+});
+
 // Add smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', function (e) {
@@ -63,51 +71,55 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   });
 });
 
-// Add this to your existing JavaScript
+// Circular Progress Animation
+function updateProgressColors() {
+  const progressCircles = document.querySelectorAll('.progress');
 
-// Intersection Observer for about section animation
-const aboutSection = document.getElementById('about');
-const aboutImage = document.querySelector('.about-image img');
+  progressCircles.forEach((circle) => {
+    const percent = circle.getAttribute('data-percent');
+    const degrees = (percent / 100) * 360;
 
-const aboutObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        aboutSection.classList.add('in-view');
+    // Set the conic gradient for the progress
+    if (document.body.classList.contains('dark-mode')) {
+      circle.style.background = `conic-gradient(var(--primary) ${degrees}deg, var(--dark) 0deg)`;
+    } else {
+      circle.style.background = `conic-gradient(var(--primary) ${degrees}deg, var(--light) 0deg)`;
+    }
+  });
+}
 
-        // Add a slight delay to sync with scroll
-        setTimeout(() => {
-          if (aboutImage) {
-            aboutImage.style.animation = 'imageTransition 1.5s ease forwards';
-          }
-        }, 300);
-      }
-    });
-  },
-  { threshold: 0.3 }
-);
-
-aboutObserver.observe(aboutSection);
-
-// Additional smooth transition for the entire page
-document.querySelectorAll('section').forEach((section) => {
-  section.style.opacity = '0';
-  section.style.transform = 'translateY(50px)';
-  section.style.transition = 'all 1s ease';
+// Initialize progress circles
+document.addEventListener('DOMContentLoaded', function () {
+  updateProgressColors();
 });
 
-const sectionObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  },
-  { threshold: 0.1 }
-);
+// Add active class to navigation links based on scroll position
+window.addEventListener('scroll', () => {
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll(
+    '.nav-links a, .mobile-nav-links a'
+  );
 
-document.querySelectorAll('section').forEach((section) => {
-  sectionObserver.observe(section);
+  let current = '';
+
+  sections.forEach((section) => {
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.clientHeight;
+
+    if (scrollY >= sectionTop - 100) {
+      current = section.getAttribute('id');
+    }
+  });
+
+  navLinks.forEach((link) => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${current}`) {
+      link.classList.add('active');
+    }
+  });
+});
+
+// Add loading animation
+window.addEventListener('load', () => {
+  document.body.classList.add('loaded');
 });
