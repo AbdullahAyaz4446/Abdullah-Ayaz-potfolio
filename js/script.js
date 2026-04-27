@@ -14,9 +14,6 @@ themeToggle.addEventListener('click', () => {
     themeIcon.classList.add('fa-moon');
     localStorage.setItem('theme', 'light');
   }
-
-  // Update circular progress colors
-  updateProgressColors();
 });
 
 // Check for saved theme preference
@@ -53,7 +50,7 @@ document.querySelectorAll('.mobile-nav-links a').forEach((link) => {
   link.addEventListener('click', closeMobileMenu);
 });
 
-// Add smooth scrolling for navigation links
+// Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();
@@ -71,42 +68,26 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   });
 });
 
-// Circular Progress Animation
-function updateProgressColors() {
-  const progressCircles = document.querySelectorAll('.progress');
-
-  progressCircles.forEach((circle) => {
-    const percent = circle.getAttribute('data-percent');
-    const degrees = (percent / 100) * 360;
-
-    // Set the conic gradient for the progress
-    if (document.body.classList.contains('dark-mode')) {
-      circle.style.background = `conic-gradient(var(--primary) ${degrees}deg, var(--dark) 0deg)`;
-    } else {
-      circle.style.background = `conic-gradient(var(--primary) ${degrees}deg, var(--light) 0deg)`;
-    }
-  });
-}
-
-// Initialize progress circles
-document.addEventListener('DOMContentLoaded', function () {
-  updateProgressColors();
+// Header scroll effect
+window.addEventListener('scroll', () => {
+  const header = document.querySelector('header');
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
 });
 
-// Add active class to navigation links based on scroll position
+// Active nav link on scroll
 window.addEventListener('scroll', () => {
   const sections = document.querySelectorAll('section');
-  const navLinks = document.querySelectorAll(
-    '.nav-links a, .mobile-nav-links a'
-  );
+  const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-links a');
 
   let current = '';
 
   sections.forEach((section) => {
     const sectionTop = section.offsetTop;
-    const sectionHeight = section.clientHeight;
-
-    if (scrollY >= sectionTop - 100) {
+    if (scrollY >= sectionTop - 150) {
       current = section.getAttribute('id');
     }
   });
@@ -117,9 +98,4 @@ window.addEventListener('scroll', () => {
       link.classList.add('active');
     }
   });
-});
-
-// Add loading animation
-window.addEventListener('load', () => {
-  document.body.classList.add('loaded');
 });

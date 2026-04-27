@@ -1,156 +1,152 @@
-// Intersection Observer for about section animation
-const aboutSection = document.getElementById('about');
-const aboutImage = document.querySelector('.about-image img');
+// ===== Typing Effect =====
+const typingTexts = [
+  'React Native Developer',
+  'Mobile App Builder',
+  'Cross-Platform Expert',
+  'UI/UX Enthusiast',
+];
 
-const aboutObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        aboutSection.classList.add('in-view');
+let textIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+const typingElement = document.getElementById('typing-text');
 
-        // Add a slight delay to sync with scroll
-        setTimeout(() => {
-          if (aboutImage) {
-            aboutImage.style.animation = 'imageTransition 1.5s ease forwards';
-          }
-        }, 300);
-      }
-    });
-  },
-  { threshold: 0.3 }
-);
+function typeEffect() {
+  if (!typingElement) return;
 
-aboutObserver.observe(aboutSection);
+  const currentText = typingTexts[textIndex];
 
-// Additional smooth transition for the entire page
-document.querySelectorAll('section').forEach((section) => {
-  section.style.opacity = '0';
-  section.style.transform = 'translateY(50px)';
-  section.style.transition = 'all 1s ease';
-});
-
-const sectionObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  },
-  { threshold: 0.1 }
-);
-
-document.querySelectorAll('section').forEach((section) => {
-  sectionObserver.observe(section);
-});
-
-// Skill circles animation on scroll
-const skillCircles = document.querySelectorAll('.skill-circle');
-
-const skillObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.style.animation = 'pulse 0.6s ease';
-        setTimeout(() => {
-          entry.target.style.animation = '';
-        }, 600);
-      }
-    });
-  },
-  { threshold: 0.5 }
-);
-
-skillCircles.forEach((circle) => {
-  skillObserver.observe(circle);
-});
-
-// Add pulse animation for skill circles
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-  }
-`;
-document.head.appendChild(style);
-
-// Typing effect for hero text
-function typeWriter(element, text, speed = 50) {
-  let i = 0;
-  element.innerHTML = '';
-
-  function typing() {
-    if (i < text.length) {
-      element.innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typing, speed);
-    }
+  if (isDeleting) {
+    typingElement.textContent = currentText.substring(0, charIndex - 1);
+    charIndex--;
+  } else {
+    typingElement.textContent = currentText.substring(0, charIndex + 1);
+    charIndex++;
   }
 
-  typing();
+  let speed = isDeleting ? 40 : 80;
+
+  if (!isDeleting && charIndex === currentText.length) {
+    speed = 2000; // Pause at end
+    isDeleting = true;
+  } else if (isDeleting && charIndex === 0) {
+    isDeleting = false;
+    textIndex = (textIndex + 1) % typingTexts.length;
+    speed = 500; // Pause before next word
+  }
+
+  setTimeout(typeEffect, speed);
 }
 
-// Initialize typing effect when hero section is in view
-const heroObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const heroText = document.querySelector('.hero-text p');
-        const originalText = heroText.textContent;
+// Start typing when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(typeEffect, 800);
+});
 
-        // Reset and start typing effect
-        heroText.style.borderRight = '2px solid var(--primary)';
-        typeWriter(heroText, originalText);
+// ===== Scroll Reveal Animations =====
+function revealOnScroll() {
+  const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-up');
 
-        // Remove cursor after typing is done
-        setTimeout(() => {
-          heroText.style.borderRight = 'none';
-        }, originalText.length * 50 + 500);
+  reveals.forEach((el) => {
+    const windowHeight = window.innerHeight;
+    const elementTop = el.getBoundingClientRect().top;
+    const revealPoint = 100;
 
-        // Unobserve after animation
-        heroObserver.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.5 }
-);
+    if (elementTop < windowHeight - revealPoint) {
+      el.classList.add('active');
+    }
+  });
+}
 
-heroObserver.observe(document.getElementById('hero'));
+window.addEventListener('scroll', revealOnScroll);
+window.addEventListener('load', revealOnScroll);
 
-// Add scroll to top button
+// ===== SVG Circular Progress Animation =====
+function animateSkillCircles() {
+  const skillItems = document.querySelectorAll('.skill-item[data-percent]');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const percent = parseInt(entry.target.getAttribute('data-percent'));
+          const progressCircle = entry.target.querySelector('.progress-circle');
+          if (progressCircle) {
+            // circumference = 2 * PI * r = 2 * 3.14159 * 35 ≈ 220
+            const circumference = 220;
+            const offset = circumference - (percent / 100) * circumference;
+            progressCircle.style.strokeDashoffset = offset;
+          }
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+
+  skillItems.forEach((item) => {
+    observer.observe(item);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', animateSkillCircles);
+
+// ===== Staggered Project Card Animations =====
+function staggerProjectCards() {
+  const cards = document.querySelectorAll('.project-card');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('active');
+          }, index * 150);
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  cards.forEach((card) => {
+    observer.observe(card);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', staggerProjectCards);
+
+// ===== Scroll to Top Button =====
 const scrollToTopBtn = document.createElement('button');
 scrollToTopBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
-scrollToTopBtn.className = 'scroll-to-top';
+scrollToTopBtn.setAttribute('aria-label', 'Scroll to top');
 scrollToTopBtn.style.cssText = `
   position: fixed;
   bottom: 30px;
   right: 30px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--bg-gradient);
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
   color: white;
   border: none;
   cursor: pointer;
-  font-size: 1.2rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
   transform: translateY(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 document.body.appendChild(scrollToTopBtn);
 
 scrollToTopBtn.addEventListener('click', () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 window.addEventListener('scroll', () => {
@@ -165,13 +161,26 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// Add hover effect for scroll to top button
 scrollToTopBtn.addEventListener('mouseenter', () => {
-  scrollToTopBtn.style.transform = 'translateY(-5px)';
+  scrollToTopBtn.style.transform = 'translateY(-5px) scale(1.05)';
 });
 
 scrollToTopBtn.addEventListener('mouseleave', () => {
   if (window.scrollY > 500) {
     scrollToTopBtn.style.transform = 'translateY(0)';
+  }
+});
+
+// ===== Parallax effect on hero section =====
+window.addEventListener('scroll', () => {
+  const heroImage = document.querySelector('.hero-image');
+  const heroText = document.querySelector('.hero-text');
+
+  if (heroImage && heroText) {
+    const scrollY = window.scrollY;
+    if (scrollY < window.innerHeight) {
+      heroImage.style.transform = `translateY(${scrollY * 0.1}px)`;
+      heroText.style.transform = `translateY(${scrollY * 0.05}px)`;
+    }
   }
 });
