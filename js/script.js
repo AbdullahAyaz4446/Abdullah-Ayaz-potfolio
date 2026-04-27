@@ -81,7 +81,9 @@ window.addEventListener('scroll', () => {
 // Active nav link on scroll
 window.addEventListener('scroll', () => {
   const sections = document.querySelectorAll('section');
-  const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-links a');
+  const navLinks = document.querySelectorAll(
+    '.nav-links a, .mobile-nav-links a',
+  );
 
   let current = '';
 
